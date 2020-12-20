@@ -1,0 +1,24 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+\subsection{Machine Learning Analysis}
+\subsubsection{Machine Learning Methods}
+Analysis was performed in Python using the Keras library from TensorFlow, decoding libraries from MNE-Python, and the sklearn library. Data was split into training sets of 500 trials for each subject with 100 trials of test trials. Trials were time-binned from 0-0.4 seconds at 0.025 second intervals to account for the 40hz MEG data. The data is split into classes based on angle. For example, if we wanted 4 classes, class 0 corresponds to gabors oriented from 0-45 degrees, class 1 from 45-90, class 2 from 90-135, class 3 from 135-180. An issue is immediately apparent from these class divisions. A gabor oriented at 179 degrees is marked as class 3 despite being very similar to a gabor marked in class 1, at 1 degree for example. To account for this, we can use a few tactics: (1) using many classes to minimize the inaccuracy of any one individual class, (2) split the first class between 180 degrees and 0 degrees, or (3) develop a cost function that takes the cosine encoding into account. Models were trained for each subject to account for individual Model accuracy was calculated with 5-fold cross-validation and evaluation accuracy on the test dataset. Model accuracy was then compared with the results of a permutation test, in which we shuffled around the training and test labels of the dataset to calculate a baseline accuracy for a naive model. This test essentially compares our models to a chance accuracy.
+
+We used source localization to clarify the readings we received from the electrodes. To validate that the source localization data actually improves our accuracy, or at least gives us equivalent performance, we ran our experiments on inputs from the MEG electrodes (the naive model) and the MRI vertices (the source localization model). There were many more MRI vertices than MEG electrodes, so the weight matrices for the source localization models were much larger than the electrode models. This shouldn't impact the results, but it does mean that we need to tune our hyperparameters differently for electrode and MRI models.
+
+\subsubsection{Sliding Logistic Regression Model}
+The machine learning model used for our control model was a sliding logistic regression model, which calculates a separate accuracy for each timestep of our MEG input signal. For 16 timesteps, we calculate 16 different logistic regression weights, and update these weights using a gradient descent procedure while training. The model was regularized with an elastic net regularization term, which acts as a combination of L1 and L2 regression. This regularization term helps enforce sparsity within our model and prevents weights that are too large, combining the traditional benefits of L1 and L2 regularization. The model also used a "select K best" routine that selects the $K$ best features from the model, based on their contributions to the accuracy. We then had to tune the hyperparameters for these additions to our model, namely the size of $K$, the ratio between L1 and L2 loss for elasticnet, and the regularization parameter $C$. The hyperparameters were tuned to get the best cross-validation accuracy for 500 trials.
+
+%TODO: Final HyperParameters?
+
+The logistic regression model was used for its simplicity and interpretability. The model is relatively easy to implement, especially with the machine learning packages that are already built into scikit-learn and mne-python. The model has only one layer, making it relatively fast to run the model and tune the model parameters. This also means that we can interpret the weights quite easily, as there is a one-to-one correspondence between a particular weight and a reading from an electrode or MRI vertex. This tells us that if a particular weight has a high value, the corresponding electrode/vertex is weighted highly in the model.
+
+\subsubsection{Sliding Neural Network Model}
+We also tested our control model with a sliding neural network (SNN). Similar to the sliding logistic regression model, the SNN calculates separate predictions and model weights for each timestep in the input, but we instead train a neural network instead of a logistic regression model. The SNN is much more complex than the logistic regression model, as it has multiple layers, activation functions between each layer, and multiple hyperparameters to tune.
+
+\subsubsection{Recurrent Neural Network Model}
+
+\subsubsection{Serial Dependence Model}
+
+\end{document}
