@@ -1,5 +1,23 @@
 \documentclass[../main.tex]{subfiles}
 
 \begin{document}
+A developing field in visual science is the decoding of stimuli based on brain imaging. Decoding can confirm our theories about how information is represented by the brain - we might confirm our theories about the motor system by classifying MEG signals corresponding to different muscle movements. Decoding can potentially be used to diagnose brain damage or diseases, where we might use EEG to augment ADHD diagnosis based on increased alpha frequencies. Or we might use decoding to control a brain-machine interface or decode imagery in dreams. With regards to vision, decoding has been used to confirm our theories about orientation perception and visual cortex topography. An interest challenge with visual decoding is that our visual system generates a smooth, uninterrupted perception of the world from a noisy and discontinuous input stream of photons. Vision must adapt to changes in lighting, muscle movements, object movements, and more, and thus visual decoding likely needs to take this adaptation into account. 
+
+Adaptation is useful to the visual system because the physical world is fairly static, even if visual input is noisy; the visual system can assume that the current visual input is likely to represent a physical context similar to previous visual inputs, and can use this assumption to smooth out perception. There are numerous adaptation metrics involved in creating this continuous perception. An adaptation of particular interest is visual serial dependence \citep{fischer_whitney_2014}, i.e. systemically biasing the current perception of the world towards recent inputs. The serial dependence effect is reproducible with a simple behavioral task that briefly shows a subject an oriented Gabor patch and then asks them to orient a new Gabor patch to match their perception of the stimulus. In this task, we notice that the alignment of the current stimulus is strongly attracted towards the alignment of the previous stimulant, suggesting the aforementioned systemic bias. This bias seems to last for several seconds.
+
+Serial dependence offers an interesting case study for understanding visual adaptation through visual decoding. We can easily record brain imaging data from subjects performing a serial dependence task, the effects of serial dependence are tangible and easily reproducible, and it is likely that we can account for the bias of serial dependence in a statistical model. Furthermore, previous research, like \cite{GARCIA2013515} have had success decoding oriented gratings, which are similar to the oriented Gabor patches often used in serial dependence research. This gives us good reason to think that the decoding of bias induced by serial dependence is possible.
+
+Here we recorded MEG data from participants in an orientation judgement task. Subjects viewed a randomly oriented Gabor patch and were then asked to report the perceived orientation of the Gabor patch after the stimulus disappeared. We decoded the orientation of the stimulus Gabor patch using a decoding model trained on data from 204 MEG electrodes, and achieved accuracy above that achieved by a permutation test using the same model. We investigated the effects of serial dependence on our decoding accuracy.
+
+
+
+\subsection{Background}
+\subsubsection{Serial Dependence}
+
+\subsubsection{Magnetoencephalography (MEG)}
+
+\subsubsection{Neural Decoding}
+
+\subsubsection{Machine Learning}
 
 \end{document}

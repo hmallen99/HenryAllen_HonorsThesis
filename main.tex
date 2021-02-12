@@ -1,23 +1,25 @@
-\documentclass{article}
+\documentclass[a4paper,man]{apa6}
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
+\usepackage{natbib}
 \usepackage{graphicx, verbatimbox}
 \usepackage{caption}
 \usepackage{xr}
+\bibliographystyle{apalike}
 
 \usepackage{subfiles}
 
-\title{Honors Thesis}
-\author{Henry Allen }
-\date{December 2020}
-
 \begin{document}
+\title{Modeling the Effects of Serial Dependence by Decoding Orientation from MEG}
+\author{Henry Allen }
+\affiliation{University of California, Berkeley, College of Letters and Science}
+\date{December 2020}
+\shorttitle{Decoding Serial Dependence from MEG Data}
+
+\abstract{
+  Serial Dependence, MEG, etc., etc.
+}
 
 \maketitle
-
-\begin{abstract}
-\subfile{sections/abstract}
-\end{abstract}
 
 \section{Introduction}
 \subfile{sections/introduction}
@@ -31,6 +33,15 @@
 \section{Discussion}
 \subfile{sections/discussion}
 
-\subfile{sections/references}
+
+
+\bibliography{sections/refs}
+%1 Fischer + Whitney serial Dependence paper
+%2 Other Decoding papers with gratings
+%3 Mauro work in SD
+%4 Kauro work in MEG
+%5 MNE links, freesurfer, etc.
+
+
 
 \end{document}
