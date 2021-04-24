@@ -1,13 +1,172 @@
 \documentclass[../main.tex]{subfiles}
 
 \begin{document}
-\subsection{ERF Analysis}
+\subsection{Evoked Responses}
+\subsubsection{MEG ERFs}
+We first analyzed our MEG evoked response fields (ERFs) locked to our stimulus onset. Our stimuli were displayed in the right visual field, and we found that MEG ERFs were strongest in the left posterior electrodes, as seen in figure \ref{erfs}. Evoked responses peak at around 140-200 ms in these posterior electrodes. Although MEG ERFs recorded at an electrode do not necessarily originate from cortical activity directly beneath that electrode, the high activity in the left posterior areas and the lack of activity in the frontal areas and right hemisphere suggest that our MEG signal originates from the left visual area.
 
-\subsection{Source Localization results}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.99]{figures/results/all_erf.png}
+    \caption{Stimulus-onset locked evoked response fields (ERFs) for all electrodes averaged across all subjects. ERFs are strongest in the left posterior electrodes, and ERF peaks begin at 150ms.}
+    \label{erfs}
+\end{figure}
+
+
+\subsubsection{Source Estimates}
+After processing the MEG epochs, we performed a source localization analysis for each subject. In figure \ref{source_max}, we see the averaged source estimate (morphed to the default fieldtrip "fsaverage" subject) for all subjects at the max evoked response time, around 150 ms. Similar to the MEG ERFs, source space activations are localized to left and posterior cortical areas, particularly the visual cortex areas. These source localization findings are consistent with our understanding that orientation perception is encoded in the visual cortex.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{figures/results/fsaverage_caudalboth_t0.14.png}
+    \caption{Peak evoked response for stimulus-locked source estimate data. Activity occurs mainly in the left posterior cortical areas, around the visual cortex. This maximum activity peak occurs at 150ms after stimulus onset.}
+    \label{source_max}
+\end{figure}
+
 
 \subsection{Decoding Performance}
+\subsubsection{Logistic Regression}
+Our first decoding experiments were performed with multi-class logistic regression. Here, we binned Gabor patches into 9 groups based on 9 ranges of orientations. We then performed 5-fold cross-validation on the subjects to compute accuracies over 16 time steps from 0 to 400 milliseconds. We also computed the mean accuracy over all 16 time steps. Each cross-validation experiment was performed 10 times with shuffled data to generate experimental results, and then 100 permutation tests were run with permuted data labels to generate permutation results. In figure \ref{timestep_logistic_sensor}, we see the logistic regression accuracy computed at each time step. Here, only one time step has accuracy significantly above the permutation accuracy, at 175 ms after stimulus onset. From 225 to 325 ms, there is a clear peaking structure where accuracy increases over each step, but none of these time steps are individually significant. In figure \ref{mean_acc_logistic_sensor}, we see that the mean accuracy over all time steps is significant, but with very low accuracy. Variance here is very low, as mean accuracies were averaged across all 18 subjects before permutation test comparison. These results suggest that the logistic regression is able to decode orientation, but no significant decoding structure is revealed between time steps. 
+
+We also performed logistic regression decoding with our source localized data. We did not find any significant time steps (figure \ref{timestep_logistic_source}), nor did we find the mean accuracy to be significant (figure \ref{mean_acc_logistic_source}). This could indicate that source localization introduces noise to the decoding process that can reduce decoding accuracy.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/timestep_accuracy_occipital316.png}
+    \caption{5-fold cross-validation accuracy computed at 16 time steps, with standard deviation bars. Accuracies are averaged across 18 subjects. The red highlighted section at 175ms denotes a time step with accuracy significantly above the permutation test decoding accuracy.}
+    \label{timestep_logistic_sensor}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/accuracy_occipital316.png}
+    \caption{Mean accuracy over all time steps. The experimental model achieves modest accuracy gains over the mean permutation accuracy. Bars indicate standard deviation of accuracy.}
+    \label{mean_acc_logistic_sensor}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/timestep_accuracy_source.png}
+    \caption{Mean accuracy across 16 time steps for 18 subjects using the logistic regression model with source space inputs, compared to permutation test accuracy at 16 time steps. No time steps were significant.}
+    \label{timestep_logistic_source}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/accuracy_source.png}
+    \caption{Mean accuracy over all time steps for the logistic regression model with source space inputs, compared to a permutation test accuracy.}
+    \label{mean_acc_logistic_source}
+\end{figure}
+
+\subsubsection{Support Vector Machine (SVM)}
+Similar results were achieved using the same decoding process with an SVM. SVMs are the most commonly used model in multi-variate pattern analysis, or decoding, but we don't see any performance increases over the logistic regression model here. In figure \ref{timestep_svm_sensor}, we see that there are no individual points with significant decoding accuracy. Further, while the decoding accuracy is generally above the permutation accuracy at each time step, it also remains within the standard deviation of the permutation time steps. We found a similar upward trend in decoding accuracy beginning around 225 ms as we found in the logistic regression model, but it is again not significant, based on decoding accuracy. Like the logistic regression, there is a small, but significant, increase in decoding accuracy in the mean accuracy, with p < 0.05, as determined by a permutation test (see figure \ref{mean_svm_sensor}). The variance for mean accuracy is again very low, as mean accuracy was averaged across 18 subjects before the permutation test.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/timestep_accuracy_occipital_svm.png}
+    \caption{Accuracy at 16 time steps for a support vector machine.  Bars around the line plots indicate standard deviation. No significant accuracies are achieved at any time step.}
+    \label{timestep_svm_sensor}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/accuracy_occipital_svm.png}
+    \caption{Mean accuracy over 16 points for a support vector machine compared to a permutation test. Black bars indicate decoding accuracy standard deviation.}
+    \label{mean_svm_sensor}
+\end{figure}
+
+\subsubsection{Inverted Encoding Model}
+We finally looked at the inverted encoding model (IEM) for decoding orientation, and achieved much better results in comparison to the more traditional models. Rather than generating a prediction, the IEM predicts a channel response for each of the orientation channels. This channel response is a prediction of how much a particular orientation is associated with a set of MEG data. In figure \ref{iem_channel_response}, we first looked at the mean channel response of our experimental IEM in comparison to a permutation test. Here, we see that the mean channel response, centered at 80 degrees for visualization, has a significant bell-curve structure centered at 80 degrees, while the permutation channel response is flat. This indicates that the IEM detects the highest channel response at the displayed orientation, and that channel response decreases as a function of distance from the stimulus orientation. This suggests that similar orientations have a similar encoding. These results are in line with findings from other IEM decoding papers, particularly \cite{GARCIA2013515}. However, we reproduce these results with a wider variety of possible orientations and smaller, peripheral Gabor patch targets. When we looked at the channel response at each time step (\ref{timestep_ch_response}), we found that channel response is mostly flat until 175 ms, at which point it increases until it peaks at 225ms, and then decreases again until 375ms. This indicates that channel responses increase after evoked responses, which we found to peak from 150-175ms in left hemisphere posterior electrodes.
+
+We then examined the decoding accuracy achieved by the IEM, using the orientation corresponding to the maximum channel response as the orientation prediction for an epoch. We first ran this decoding at each time step, as seen in figure \ref{timestep_accuracy_iem}. Here, we achieved significant decoding accuracy at 3 different time steps, and notice that decoding accuracy is generally higher than decoding accuracy for the previous model. Peaks in decoding accuracy correspond with peaks in the channel responses, and we notice that decoding begins to increase starting much earlier, at 125ms, but achieves a sustained peak from 225-350ms. We next computed the accuracy achieved by the mean channel response. Note that unlike previous decoding models, where we computed a mean accuracy by averaging the accuracies achieved over multiple time steps, here we computed the mean channel response and then computed the accuracy of the mean channel response as the percentage of trials where the orientation for the maximum channel response matched the orientation of the stimulus. In figures \ref{iem_accuracy} and \ref{null_comparison}, we see that the mean channel response achieved an accuracy significantly above the permutation test. This indicates that the IEM is incredibly successful at decoding orientation from MEG, and decoding accuracy increases following evoked responses in MEG, revealing a significant decoding structure as a function of time.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/perm_response.png}
+    \caption{Mean channel response for the IEM compared to a permutation test. Here, there is a significant structure in the actual channel responses in comparison to the permutation test. Red numbers indicate p values for each channel. Individual trials had peaks at different orientation channels, but all channels were centered at 80 degrees for visualization.}
+    \label{iem_channel_response}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/timestep_ch_response.png}
+    \caption{IEM Channel response at 16 time steps from 0-400ms. Higher channel response values are in yellow, while lower channel response values are in blue. Channel responses begin to increase at 175ms, forming the bell curve structure found in the mean channel response. Channel responses peak at 225ms, and slowly decrease until 375ms.}
+    \label{timestep_ch_response}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/timestep_accuracy_iem.png}
+    \caption{IEM decoding accuracy at 16 time steps. Time steps shaded green represent significant decoding time steps (p < 0.05). Experimental accuracy increases beginning at 100ms after stimulus onset, and peaks around 225-350ms.}
+    \label{timestep_accuracy_iem}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/accuracy_iem.png}
+    \caption{IEM accuracy for the mean channel response. Accuracy is significantly above the permutation accuracy, with p < 0.005.}
+    \label{iem_accuracy}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/null_comparison.png}
+    \caption{IEM decoding accuracy for mean channel response compared to null distribution. The red bar denotes the mean channel response accuracy for all subjects. The null distribution, in blue, consisted of mean channel responses for permuted labels, averaged across all subjects.}
+    \label{null_comparison}
+\end{figure}
 
 \subsection{Serial Dependence Analysis}
+\subsubsection{Behavioral performance}
+Before examining serial dependence effects on decoding accuracy, we checked for a serial dependence effect in the experimental task. In figure\ref{DoG}, we see a modest serial dependence effect, with response orientations peaking at 1.759 degrees bias towards the previous stimulus orientation. This effect size was largest when the 1-back stimulus was 20 degrees away from the current stimulus. This effect size is smaller than the effect size found in the original \cite{fischer_whitney_2014} serial dependence paper, but is still significant. However, the Gabor patches we used in this experiment were smaller than the ones used in \cite{fischer_whitney_2014}, and were also located in the periphery, at 7 degrees eccentricity, rather than in the fovea. These factors could contribute to the decreased serial dependence effect size. These results indicate that subjects' perception of the current stimulus is pulled towards their perception of the previous target.
 
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/DoG_plot.png}
+    \caption{A comparison of relative previous orientation (previous orientation - current orientation) and error on current trial (predicted orientation - actual orientation). In red, we see a derivative of Gaussian function fit to the data points. The derivative of Gaussian had an amplitude of 1.759 degrees, achieving a p-value < 0.05 according to a permutation test. In green, we see the permutation fit of the derivative of Gaussian curve, which is flat. Trials with error > 25 degrees were considered outliers and were excluded from testing. }
+    \label{DoG}
+\end{figure}
+
+\subsubsection{Decoding previous orientation}
+We then examined if the models from the decoding experiment had any success predicting the previous stimulus orientation from the MEG response to the current stimulus. We first investigated this previous stimulus decoding with the SVM and logistic regression, but did not find any significant results in mean accuracy or time step accuracy. This does not indicate that residual effects from the previous stimulus were not there, just that these models were unable to detect these effects. The SVM and logistic regression model already had slim accuracy improvements over a chance accuracy, so this result is expected.
+
+However, we found very interesting results with the IEM model. Though there was no significance found in the mean channel response accuracy (figure \ref{iem_accuracy_prev}), there was significant decoding accuracy at 175ms (p < 0.05) (figure \ref{iem_timestep_accuracy_prev}), and increased channel responses from 150-200ms (figure \ref{timestep_ch_response_prev}). We finally notice the same bell curve structure found in the current stimulus decoding, but it has a far lower amplitude (figure \ref{iem_ch_response_prev}. This indicates there is some significant residual effect left by the previous stimulus, though no significant structure is revealed. Further, the peak decoding accuracy in previous stimulus decoding occurs just before current stimulus decoding accuracy becomes significant. This could indicate that there is a bias toward the prior stimulus shortly after the current stimulus is processed, but this bias disappears as the current stimulus becomes encoded in perception.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/accuracy_prev_iem.png}
+    \caption{IEM previous trial stimulus decoding accuracy for the mean channel response, averaged across 18 subjects. Decoding accuracy is not significant in comparison to a permutation test.}
+    \label{iem_accuracy_prev}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/timestep_accuracy_iem_prev.png}
+    \caption{IEM previous decoding accuracy over 16 timesteps, averaged across 18 subjects. The accuracy at 175 ms is significant with p < 0.05, (marked in green).}
+    \label{iem_timestep_accuracy_prev}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/timestep_ch_response_prev.png}
+    \caption{IEM channel response for previous stimulus orientation. Higher channel responses are in yellow, lower are in blue. Channel responses peak at 175ms. Peak channel responses are lower in previous decoding (0.3 vs. 0.35).}
+    \label{timestep_ch_response_prev}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.7]{figures/results/perm_response_prev.png}
+    \caption{IEM mean channel response for previous stimulus decoding compared to a permutation test. Red values are p values for individual channel responses compared to the permutation test channel responses.}
+    \label{iem_ch_response_prev}
+\end{figure}
+
+\subsubsection{Channel response bias vs. relative previous orientation}
+We finally analyzed how serial dependence might directly affect IEM decoding performance by comparing channel response to relative previous previous orientation (previous orientation - current orientation). Here, we binned channel responses according to relative previous orientation with 15 bins, centered at 0 degrees. We calculated the mean channel response for each bin, and compared each bin to randomly shuffled permutations of the bins. We repeated this for each of the 16 time steps, but did not find any bins with significant or systemic channel response bias towards or away from the previous orientation. For example, in figure \ref{sd_all_t7}, we see the binned channel response at 175ms, where we had the highest previous decoding accuracy, and find no significant channel responses. We are particularly interested in channel responses from -20 to +20 degrees relative previous orientation, where serial dependence effects would be strongest. Here, we see that there is actually channel response bias away from previous orientations in this range (the opposite effect of serial dependence), but it is not significant according to this test. This lack of effect could indicate that bins are too large to gain meaningful information from, or that the orientation bins we used for decoding are too far apart to generate a meaningful serial dependence effect in decoding. The latter is possible with such a small serial dependence effect size.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.45]{figures/results/sd_all_t7.png}
+    \caption{A comparison of IEM channel responses binned by relative previous orientation at 175ms. At the top, we see the binned channel responses. Blocks that are more yellow represent higher channel responses, while blue blocks have lower channel response. The middle figure shows a permutation test of the binned channels, in which bins were assigned according to shuffled relative previous orientation. The bottom figure shows the p values for each channel response block at each relative previous orientation. A low p value at a specific orientation for a bin would indicate that the block is significantly different than the average channel response for that orientation. Here, most p values hover around 0.4 to 0.6. }
+    \label{sd_all_t7}
+\end{figure}
 
 \end{document}

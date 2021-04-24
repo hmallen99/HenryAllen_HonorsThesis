@@ -81,6 +81,9 @@ The first machine learning model used for our control model was a sliding logist
 
 Here, logistic regression models $\mathrm{Pr}(\textrm{orientation of stimulus } (\mathrm{y}_i) = \omega | \mathrm{X}_i)$. We use multinomial logistic regression for multi-class prediction with logistic regression. The logistic regression model was used for its simplicity and interpretability. The model is relatively easy to implement, especially with the machine learning packages that are already built into scikit-learn \citep{scikit-learn} and mne-python \citep{mne}. The model has only one layer, making it relatively fast to run the model and tune the model parameters. This also means that we can interpret the weights quite easily, as there is a one-to-one correspondence between a particular weight and feature from an MEG electrode or MRI vertex. This tells us that if a particular weight has a high value, the corresponding electrode/vertex is weighted highly in the model. Further, the logistic regression model outputs a probability for each class, which is useful in serial dependence analysis.
 
+\subsubsection{Support Vector Machine Model}
+%TODO: SVM info
+
 \subsubsection{Neural Network Models}
 We also ran experiments with two neural network based models: a sliding neural network (SNN) and a wavelet-based convolutional neural network (CNN). Each of these models was built using the Keras framework from TensorFlow \citep{chollet2015keras, tensorflow2015-whitepaper}. The SNN and CNN were used because they had the potential of modeling higher-level features, like orientation, in the data. However, neural networks are generally less interpretable than regression models, and are much easier to overfit to a small data set. 
 
