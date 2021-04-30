@@ -93,22 +93,13 @@ The wavelet CNN took a different approach to analyzing the data, generating a si
 
 
 \subsubsection{Inverted Encoding Model}
-A final decoding approach was the use of the Inverted Encoding Model (IEM) \citep{Brouwer09, Brouwer, GARCIA2013515,sprague_serences_2013, sprague_saproo_serences_2015}. The IEM calculates the predicted responses of each classification channel based on the MEG data, rather than giving a class prediction. This model is well-suited for orientation decoding because it uses a cosine basis set to transform the input data, modeling the inputs better than a linear scale from 0 to 179. In the cosine basis set (shown in \ref{basis_set}, a perfect channel response centered at 160 degrees would propagate equally to the right and left and wrap around the unit circle, having a similar response at 140 degrees and 180 degrees, and 120 degrees and 20 degrees. This can be seen in \ref{ideal_chan_resp}. 
+A final decoding approach was the use of the Inverted Encoding Model (IEM) \citep{Brouwer09, Brouwer, GARCIA2013515,sprague_serences_2013, sprague_saproo_serences_2015}. The IEM calculates the predicted responses of each classification channel based on the MEG data, rather than giving a class prediction. This model is well-suited for orientation decoding because it uses a cosine basis set to transform the input data, modeling the inputs better than a linear scale from 0 to 179. In the cosine basis set (figure \ref{basis_set}), a perfect channel response centered at 160 degrees would propagate equally to the right and left and wrap around the unit circle, having a similar response at 140 degrees and 180 degrees, and 120 degrees and 20 degrees.
 
 \begin{figure}
     \centering
     \includegraphics[scale=0.7]{figures/methods/basis_set.png}
-    \caption{An example cosine basis set for 9 orientation classes. Each color represents the
-    basis function for a single orientation channel, where the cosine function peaks at that
-    orientation channel.}
+    \caption{a) An example cosine basis set for 9 orientation classes. Each color represents the basis function for a single orientation channel, where the cosine function peaks at that orientation channel. b) The ideal channel response for a stimulus oriented at 160 degrees.}
     \label{basis_set}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[scale=0.7]{figures/methods/ideal_chan_resp.png}
-    \caption{The ideal channel response for a stimulus oriented at 160 degrees.}
-    \label{ideal_chan_resp}
 \end{figure}
 
 To compute the predicted channel response for our MEG data, we first construct a hypothetical channel
