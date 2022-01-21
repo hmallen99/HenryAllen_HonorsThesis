@@ -1,13 +1,25 @@
-\documentclass[letterpaper, 12pt, man]{article}
+\documentclass[letterpaper, 12pt]{article}
+%\documentclass[doc]{apa6}
 \usepackage[letterpaper, margin=0.5in]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage{natbib}
-\usepackage{graphicx, verbatimbox}
+\usepackage{graphicx}
 \usepackage{caption}
-\usepackage{xr}
 \bibliographystyle{apalike}
 
 \usepackage{subfiles}
+\usepackage{lipsum}
+\usepackage{titlesec}
+\usepackage{indentfirst}
+
+\titleformat{\section}    
+       {\bfseries\filcenter}{\thesection}{1em}{}
+
+\titleformat{\subsection}    
+       {\bfseries}{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}    
+       {\bfseries\itshape}{\thesubsubsection}{1em}{}
 
 \begin{document}
 
@@ -16,27 +28,35 @@
        \vspace*{1cm}
 
        \Huge
-       \textbf{Decoding Current and Previous Orientation Stimuli from Magnetoencephalography}
+       \textbf{Decoding Current and Previous Orientation from Small Targets in the Periphery Using Magnetoencephalography}
 
        \vspace{0.5cm}
 
        \Large    
-       \vspace{1.5cm}
+       \vspace{1.1cm}
 
        \textbf{Henry Allen}
 
        \vfill
             
-
-
-            
-       \vspace{0.8cm}
+       \vspace{0.4cm}
      
 
        \Large            
-       Department of Cognitive Science\\
-       University of California, Berkeley\\
-       May 2020
+       An Undergraduate Honors Thesis\\
+       Submitted to the Cognitive Science Program\\
+       \textbf{University of California, Berkeley}\\
+       \vspace{0.4cm}
+       Spring 2021
+       
+       \vfill
+       
+       \vspace{0.4cm}
+       \Large
+       Advisors: Yuki Murai, PhD and David Whitney, PhD\\
+       Readers: David Whitney, PhD and Kevin Weiner, PhD\\
+       
+       
        
             
    \end{center}
@@ -46,18 +66,16 @@
   \subfile{sections/abstract}
 }
 
-
-
-\section{Introduction}
+\section*{Introduction}
 \subfile{sections/introduction}
 
-\section{Methods}
+\section*{Methods}
 \subfile{sections/methods}
 
-\section{Results}
+\section*{Results}
 \subfile{sections/results}
 
-\section{Discussion}
+\section*{Discussion}
 \subfile{sections/discussion}
 
 \bibliography{sections/refs}
